@@ -1,0 +1,44 @@
+[
+{
+  "directory": "/home/erick/Desktop/a24_ift3355_tp2/build",
+  "command": "/usr/bin/g++  -I/home/erick/Desktop/a24_ift3355_tp2/src -I/home/erick/Desktop/a24_ift3355_tp2/extern -g -std=c++17 -o CMakeFiles/RAY.dir/src/main.cpp.o -c /home/erick/Desktop/a24_ift3355_tp2/src/main.cpp",
+  "file": "/home/erick/Desktop/a24_ift3355_tp2/src/main.cpp",
+  "output": "CMakeFiles/RAY.dir/src/main.cpp.o"
+},
+{
+  "directory": "/home/erick/Desktop/a24_ift3355_tp2/build",
+  "command": "/usr/bin/g++  -I/home/erick/Desktop/a24_ift3355_tp2/src -I/home/erick/Desktop/a24_ift3355_tp2/extern -g -std=c++17 -o CMakeFiles/RAY.dir/src/object.cpp.o -c /home/erick/Desktop/a24_ift3355_tp2/src/object.cpp",
+  "file": "/home/erick/Desktop/a24_ift3355_tp2/src/object.cpp",
+  "output": "CMakeFiles/RAY.dir/src/object.cpp.o"
+},
+{
+  "directory": "/home/erick/Desktop/a24_ift3355_tp2/build",
+  "command": "/usr/bin/g++  -I/home/erick/Desktop/a24_ift3355_tp2/src -I/home/erick/Desktop/a24_ift3355_tp2/extern -g -std=c++17 -o CMakeFiles/RAY.dir/src/parser.cpp.o -c /home/erick/Desktop/a24_ift3355_tp2/src/parser.cpp",
+  "file": "/home/erick/Desktop/a24_ift3355_tp2/src/parser.cpp",
+  "output": "CMakeFiles/RAY.dir/src/parser.cpp.o"
+},
+{
+  "directory": "/home/erick/Desktop/a24_ift3355_tp2/build",
+  "command": "/usr/bin/g++  -I/home/erick/Desktop/a24_ift3355_tp2/src -I/home/erick/Desktop/a24_ift3355_tp2/extern -g -std=c++17 -o CMakeFiles/RAY.dir/src/raytracer.cpp.o -c /home/erick/Desktop/a24_ift3355_tp2/src/raytracer.cpp",
+  "file": "/home/erick/Desktop/a24_ift3355_tp2/src/raytracer.cpp",
+  "output": "CMakeFiles/RAY.dir/src/raytracer.cpp.o"
+},
+{
+  "directory": "/home/erick/Desktop/a24_ift3355_tp2/build",
+  "command": "/usr/bin/g++  -I/home/erick/Desktop/a24_ift3355_tp2/src -I/home/erick/Desktop/a24_ift3355_tp2/extern -g -std=c++17 -o CMakeFiles/RAY.dir/src/container.cpp.o -c /home/erick/Desktop/a24_ift3355_tp2/src/container.cpp",
+  "file": "/home/erick/Desktop/a24_ift3355_tp2/src/container.cpp",
+  "output": "CMakeFiles/RAY.dir/src/container.cpp.o"
+},
+{
+  "directory": "/home/erick/Desktop/a24_ift3355_tp2/build",
+  "command": "/usr/bin/g++  -I/home/erick/Desktop/a24_ift3355_tp2/src -I/home/erick/Desktop/a24_ift3355_tp2/extern -g -std=c++17 -o CMakeFiles/RAY.dir/src/aabb.cpp.o -c /home/erick/Desktop/a24_ift3355_tp2/src/aabb.cpp",
+  "file": "/home/erick/Desktop/a24_ift3355_tp2/src/aabb.cpp",
+  "output": "CMakeFiles/RAY.dir/src/aabb.cpp.o"
+},
+{
+  "directory": "/home/erick/Desktop/a24_ift3355_tp2/build",
+  "command": "/usr/bin/g++  -I/home/erick/Desktop/a24_ift3355_tp2/src -I/home/erick/Desktop/a24_ift3355_tp2/extern -g -std=c++17 -o CMakeFiles/RAY.dir/src/resource_manager.cpp.o -c /home/erick/Desktop/a24_ift3355_tp2/src/resource_manager.cpp",
+  "file": "/home/erick/Desktop/a24_ift3355_tp2/src/resource_manager.cpp",
+  "output": "CMakeFiles/RAY.dir/src/resource_manager.cpp.o"
+}
+]

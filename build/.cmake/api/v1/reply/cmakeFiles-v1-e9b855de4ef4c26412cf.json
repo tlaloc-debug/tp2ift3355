@@ -1,0 +1,114 @@
+{
+	"inputs" : 
+	[
+		{
+			"path" : "CMakeLists.txt"
+		},
+		{
+			"isGenerated" : true,
+			"path" : "build/CMakeFiles/3.28.1/CMakeSystem.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/home/erick/.local/lib/python3.8/site-packages/cmake/data/share/cmake-3.28/Modules/CMakeSystemSpecificInitialize.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/home/erick/.local/lib/python3.8/site-packages/cmake/data/share/cmake-3.28/Modules/Platform/Linux-Initialize.cmake"
+		},
+		{
+			"isGenerated" : true,
+			"path" : "build/CMakeFiles/3.28.1/CMakeCXXCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/home/erick/.local/lib/python3.8/site-packages/cmake/data/share/cmake-3.28/Modules/CMakeSystemSpecificInformation.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/home/erick/.local/lib/python3.8/site-packages/cmake/data/share/cmake-3.28/Modules/CMakeGenericSystem.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/home/erick/.local/lib/python3.8/site-packages/cmake/data/share/cmake-3.28/Modules/CMakeInitializeConfigs.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/home/erick/.local/lib/python3.8/site-packages/cmake/data/share/cmake-3.28/Modules/Platform/Linux.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/home/erick/.local/lib/python3.8/site-packages/cmake/data/share/cmake-3.28/Modules/Platform/UnixPaths.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/home/erick/.local/lib/python3.8/site-packages/cmake/data/share/cmake-3.28/Modules/CMakeCXXInformation.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/home/erick/.local/lib/python3.8/site-packages/cmake/data/share/cmake-3.28/Modules/CMakeLanguageInformation.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/home/erick/.local/lib/python3.8/site-packages/cmake/data/share/cmake-3.28/Modules/Compiler/GNU-CXX.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/home/erick/.local/lib/python3.8/site-packages/cmake/data/share/cmake-3.28/Modules/Compiler/GNU.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/home/erick/.local/lib/python3.8/site-packages/cmake/data/share/cmake-3.28/Modules/Compiler/CMakeCommonCompilerMacros.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/home/erick/.local/lib/python3.8/site-packages/cmake/data/share/cmake-3.28/Modules/Platform/Linux-GNU-CXX.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/home/erick/.local/lib/python3.8/site-packages/cmake/data/share/cmake-3.28/Modules/Platform/Linux-GNU.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/home/erick/.local/lib/python3.8/site-packages/cmake/data/share/cmake-3.28/Modules/CMakeCommonLanguageInclude.cmake"
+		},
+		{
+			"path" : "extern/CMakeLists.txt"
+		},
+		{
+			"path" : "extern/bitmap_image/CMakeLists.txt"
+		},
+		{
+			"path" : "extern/linalg/CMakeLists.txt"
+		},
+		{
+			"path" : "extern/pcg32/CMakeLists.txt"
+		}
+	],
+	"kind" : "cmakeFiles",
+	"paths" : 
+	{
+		"build" : "/home/erick/Desktop/a24_ift3355_tp2/build",
+		"source" : "/home/erick/Desktop/a24_ift3355_tp2"
+	},
+	"version" : 
+	{
+		"major" : 1,
+		"minor" : 0
+	}
+}
