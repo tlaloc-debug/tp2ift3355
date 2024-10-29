@@ -116,7 +116,8 @@ void Raytracer::render(const Scene& scene, Frame* output)
 
 				if (scene.container->intersect(ray, EPSILON, z_depth, &hit)) {
 					Material& material = ResourceManager::Instance()->materials[hit.key_material];
-					avg_ray_color += material.color_albedo;
+					// avg_ray_color += material.color_albedo;
+					avg_ray_color += shade(scene, hit);
 					avg_z_depth += hit.depth;
 				}
 			}
@@ -194,6 +195,11 @@ void Raytracer::trace(const Scene& scene,
 
 double3 Raytracer::shade(const Scene& scene, Intersection hit)
 {
-	// Material& material = ResourceManager::Instance()->materials[hit.key_material]; lorsque vous serez rendu à la partie texture.
-	return double3{0,0,0};
+	//lorsque vous serez rendu à la partie texture.
+	Material& material = ResourceManager::Instance()->materials[hit.key_material]; 
+	
+	double3 lumiere_amb(0, 0, 0);
+	lumiere_amb = scene.ambient_light * material.refractive_index * material.color_albedo;
+
+	return lumiere_amb;
 }

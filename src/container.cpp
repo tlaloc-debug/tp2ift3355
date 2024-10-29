@@ -8,7 +8,7 @@
 //				- S'il y a intersection, ajouter le noeud à ceux à visiter. 
 // - Retourner l'intersection avec la profondeur maximale la plus PETITE.
 bool BVH::intersect(Ray ray, double t_min, double t_max, Intersection* hit) {
-	printf("intersect");
+	//printf("intersect");
 	return true;
 }
 
@@ -20,22 +20,26 @@ bool BVH::intersect(Ray ray, double t_min, double t_max, Intersection* hit) {
 // - Retourner l'intersection avec la profondeur maximale la plus PETITE.
 bool Naive::intersect(Ray ray, double t_min, double t_max, Intersection* hit) {
 	//printf(Naive.IContainer.aabb);
-	//printf("intersect");
 
-    // Acceder a la lista de objetos
     bool hit_anything = false;
     double closest_so_far = t_max;
 
-    // Iterar sobre la lista de objetos en la escena
-    //std::cout << objects[0]->local_intersect(ray, t_min, t_max, hit) << "\n";
     for (auto obj : objects) {
-        hit_anything = obj->intersect(ray, t_min, t_max, hit);
-        if(hit_anything){
-			//std::cout << hit;
-		}
-       
+        // Temporales para mantener los datos de intersección actuales
+        Intersection temp_hit;
+
+        // Intentamos intersectar el rayo con el objeto actual
+        if (obj->intersect(ray, t_min, closest_so_far, &temp_hit)) {
+            hit_anything = true;
+
+            // Verificar si esta intersección está más cerca que las anteriores
+            if (temp_hit.depth < closest_so_far) {
+                closest_so_far = temp_hit.depth;  // Actualizar el z-buffer
+                *hit = temp_hit;  // Actualizar la intersección más cercana
+            }
+        }
     }
 
-    return hit_anything;  
+    return hit_anything;
 	
 }

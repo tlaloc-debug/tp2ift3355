@@ -15,6 +15,7 @@ int rsign(double value, double v0, double v1) {
 // Pour plus de d'informations sur la géométrie, référez-vous à la classe object.h.
 bool Sphere::local_intersect(Ray ray, double t_min, double t_max, Intersection *hit) 
 {
+    //printf("Sphere");
     // Vector L is from the center of the sphere (which is at (0, 0, 0)) to the origin of the ray
     //double3 L = ray.origin - this->center; // If you are at the origin, this could simply be ray.origin.
 	double3 L = ray.origin; 
@@ -71,6 +72,7 @@ bool Quad::local_intersect(Ray ray,
 							double t_min, double t_max, 
 							Intersection *hit)
 {
+    //printf("Quad");
 	// The normal of the plane is in the Z+ direction (0, 0, 1)
     double3 normal(0, 0, 1);
     
