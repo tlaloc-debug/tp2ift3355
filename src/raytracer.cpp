@@ -74,8 +74,8 @@ void Raytracer::render(const Scene& scene, Frame* output)
 	// double x_shift = 2.0 / scene.resolution[0];
 	double height = 2 * scene.camera.z_near * tan(deg2rad(scene.camera.fovy/2));
 	double width = height * scene.camera.aspect;
-	std::cout << "altura " << height << "\n"; 
-	std::cout << "ancho " << width << "\n"; 
+	// std::cout << "altura " << height << "\n"; 
+	// std::cout << "ancho " << width << "\n"; 
 	//std::cout << "aspect " << scene.camera.aspect << "\n"; 
 
 
@@ -158,7 +158,7 @@ void Raytracer::trace(const Scene& scene,
 	// Fait appel à l'un des containers spécifiées.
 	if(scene.container->intersect(ray,EPSILON,*out_z_depth,&hit)) {		
 		Material& material = ResourceManager::Instance()->materials[hit.key_material];
-		printf("INtersec\n");
+		//printf("INtersec\n");
 		// @@@@@@ VOTRE CODE ICI
 		// Déterminer la couleur associée à la réflection d'un rayon de manière récursive.
 		
