@@ -178,6 +178,61 @@ void Raytracer::trace(const Scene& scene,
 
 }
 
+// Main function to calculate the new point in the plane
+double3 move_in_plane(const double3& sphere_center, const double3& plane_point, double radius, const double2& displacement) {
+    // Normal vector to the plane
+    double3 normal = normalize(plane_point - sphere_center);
+
+    // "Right" vector in the plane (perpendicular to the normal and the Z axis)
+    double3 arbitrary_direction = {0, 0, 1};
+    double3 right_vector = normalize(cross(normal, arbitrary_direction));
+
+    // Vector "up" in the plane (perpendicular to the normal and to the "right")
+    double3 up_vector = cross(right_vector, normal);
+
+    // Scale displacements by the radius of the sphere
+    double3 right_movement = right_vector * (displacement.x * radius);
+    double3 up_movement = up_vector * (displacement.y * radius);
+
+    // Calculate the new point on the plane
+    double3 new_point = sphere_center + right_movement + up_movement;
+    return new_point;
+}
+
+double facteur_lumiere(Scene scene, double3 point, SphericalLight ligth){
+
+	int total_rays = 10;
+    int misses = 0;
+
+    for (int i = 1; i <= total_rays; ++i) {
+        // Generate a random point on the unit disk
+        double2 random_dir = random_in_unit_disk();
+
+		// Get point position on scene
+		double3 ray_end = move_in_plane(ligth.position, point, ligth.radius, random_dir);
+
+		Ray ray_lumiere;
+
+        // Create the ray with random direction
+        ray_lumiere = Ray(point, ray_end - point);
+
+		double ray_depth = length(ray_end - point);
+
+        Intersection hit_info;
+        if (scene.container->intersect(ray_lumiere, EPSILON, ray_depth, &hit_info)) {
+			misses++;
+			//std::cout << "miss";
+		}
+    }
+
+    // Calculate the proportion of rays that miss
+    double miss_ratio = static_cast<double>(misses) / total_rays;
+	double porcentage_lumiere = 1 - miss_ratio;
+
+	return porcentage_lumiere;
+
+}
+
 // @@@@@@ VOTRE CODE ICI
 // Veuillez remplir les objectifs suivants:
 // 		* Calculer la contribution des lumières dans la scène.
@@ -208,10 +263,14 @@ double3 Raytracer::shade(const Scene& scene, Intersection hit)
     // Ambient light calculation: L_aλ * k_aλ * Sλ
     ambient = scene.ambient_light * material.k_ambient * material.color_albedo;
 
+	double penumbra;
+
     // Iterate through each light in the scene
     for (const auto& light : scene.lights) {
 
 		// ================= verifier cette partie du code, cela donne de problems avec le cilindre ====================
+
+		penumbra = 1;
 
         // Light direction and distance to the light source
         double3 lightDir = normalize(light.position - hit.position);
@@ -239,15 +298,18 @@ double3 Raytracer::shade(const Scene& scene, Intersection hit)
 
 		// ===============================================================================================
 
+		penumbra = facteur_lumiere(scene, hit.position, light);
+		//penumbra = 1;
+
         // Diffuse component: 2 * k_dλ * Sλ * (N ⋅ L_i)
         double nDotL = std::max(0.0, dot(hit.normal, lightDir));
-        diffuse += 2 * material.k_diffuse * material.color_albedo * nDotL;
+        diffuse += 2 * material.k_diffuse * material.color_albedo * nDotL * penumbra;
 
         // Specular component: k_sλ * [ m * Sλ + (1 - m) ] * (R_i ⋅ E)
         double3 R_i = normalize(2 * nDotL * hit.normal - lightDir);
         double rDotE = std::max(0.0, dot(R_i, Eye));
         double m = material.k_reflection;
-        specular += material.k_specular * ((m * material.color_albedo) + (1 - m)) * rDotE;
+        specular += material.k_specular * ((m * material.color_albedo) + (1 - m)) * rDotE * penumbra;
     }
 
     // Sum the components to get the final color
