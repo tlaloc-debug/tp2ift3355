@@ -202,28 +202,55 @@ double3 Raytracer::shade(const Scene& scene, Intersection hit)
     double3 diffuse(0, 0, 0);
     double3 specular(0, 0, 0);
 
-    // Eye
+    // Vector pointing towards the eye
     double3 Eye = normalize(scene.camera.position - hit.position);
 
-    // Ambient light: \( L_{a\lambda} k_{a\lambda} S_{\lambda} \)
+    // Ambient light calculation: L_aλ * k_aλ * Sλ
     ambient = scene.ambient_light * material.k_ambient * material.color_albedo;
 
-    // For each light source in the scene
+    // Iterate through each light in the scene
     for (const auto& light : scene.lights) {
-        // Light direction and distance
-        double3 lightDir = normalize(light.position - hit.position);
 
-        // Diffuse component: \( 2 k_{d\lambda} S_{\lambda} (N \cdot L_i) \)
+		// ================= verifier cette partie du code, cela donne de problems avec le cilindre ====================
+
+        // Light direction and distance to the light source
+        double3 lightDir = normalize(light.position - hit.position);
+        double lightDistance = length(light.position - hit.position);
+
+        // Shadow ray: emitted from the hit position towards the light source
+        // Offset the starting position to avoid "surface acne" issues
+        Ray shadowRay(hit.position + EPSILON * hit.normal, lightDir);
+
+        // Check if any object obstructs the shadow ray up to the light source
+        bool in_shadow = false;
+        // for (const auto& obj : scene.objects) {
+        //     // If the shadow ray intersects an object within the light distance, the point is in shadow
+        //     if (obj->intersect(shadowRay, 1e-6, lightDistance)) {
+        //         in_shadow = true;
+        //         break;
+        //     }
+        // }
+		if (scene.container->intersect(shadowRay, EPSILON, lightDistance, &hit)) in_shadow = true;
+
+        // If the point is in shadow, skip diffuse and specular contributions for this light
+        if (in_shadow) {
+            continue;
+        }
+
+		// ===============================================================================================
+
+        // Diffuse component: 2 * k_dλ * Sλ * (N ⋅ L_i)
         double nDotL = std::max(0.0, dot(hit.normal, lightDir));
         diffuse += 2 * material.k_diffuse * material.color_albedo * nDotL;
 
-        // Specular component: \( k_{s\lambda} [ m S_{\lambda} + (1 - m)] (R_i \cdot E) \)
+        // Specular component: k_sλ * [ m * Sλ + (1 - m) ] * (R_i ⋅ E)
         double3 R_i = normalize(2 * nDotL * hit.normal - lightDir);
         double rDotE = std::max(0.0, dot(R_i, Eye));
         double m = material.k_reflection;
         specular += material.k_specular * ((m * material.color_albedo) + (1 - m)) * rDotE;
     }
 
+    // Sum the components to get the final color
     double3 outColor = ambient + diffuse + specular;
     return outColor;
 }
