@@ -114,12 +114,15 @@ void Raytracer::render(const Scene& scene, Frame* output)
 				ray = Ray(scene.camera.position, rayDirection);
 				double z_depth = scene.camera.z_far;
 
-				if (scene.container->intersect(ray, EPSILON, z_depth, &hit)) {
-					Material& material = ResourceManager::Instance()->materials[hit.key_material];
-					// avg_ray_color += material.color_albedo;
-					avg_ray_color += shade(scene, hit);
-					avg_z_depth += hit.depth;
-				}
+				// if (scene.container->intersect(ray, EPSILON, z_depth, &hit)) {
+				// 	Material& material = ResourceManager::Instance()->materials[hit.key_material];
+				// 	// avg_ray_color += material.color_albedo;
+				// 	avg_ray_color += shade(scene, hit);
+				// 	avg_z_depth += hit.depth;
+				// }
+				trace(scene, ray, ray_depth, &ray_color, &z_depth);
+				avg_ray_color += ray_color;
+				avg_z_depth += z_depth;
 			}
 
 			avg_z_depth = avg_z_depth / scene.samples_per_pixel;
@@ -141,16 +144,18 @@ void Raytracer::render(const Scene& scene, Frame* output)
     delete[] z_buffer;
 }
 
-// @@@@@@ VOTRE CODE ICI
-// Veuillez remplir les objectifs suivants:
-// 		- Détermine si le rayon intersecte la géométrie.
-//      	- Calculer la contribution associée à la réflexion.
-//			- Calculer la contribution associée à la réfraction.
-//			- Mettre à jour la couleur avec le shading + 
-//			  Ajouter réflexion selon material.reflection +
-//			  Ajouter réfraction selon material.refraction 
-//            pour la couleur de sortie.
-//          - Mettre à jour la nouvelle profondeure.
+double3 refract(const double3& incident, const double3& normal, double eta)
+{
+    double cos_i = -dot(normal, incident); 
+    double sin2_t = eta * eta * (1.0 - cos_i * cos_i); 
+    if (sin2_t > 1.0) {
+        return double3(0, 0, 0); 
+    }
+
+    double cos_t = sqrt(1.0 - sin2_t); 
+    return eta * incident + (eta * cos_i - cos_t) * normal; 
+}
+
 void Raytracer::trace(const Scene& scene,
 					  Ray ray, int ray_depth,
 					  double3* out_color, double* out_z_depth)
@@ -170,13 +175,67 @@ void Raytracer::trace(const Scene& scene,
 		//
 		// Toutes les géométries sont des surfaces et non pas de volumes.
 
-		// *out_color = 
-		// *out_z_depth =
-	} else {
-		//printf("NP-INtersec\n");
-	}
+		// Calculate the basic color using Shading
+        *out_color = shade(scene, hit);
+        
+        if (ray_depth < 10){
+            // Calculate reflection
+            double3 reflected_direction = normalize(ray.direction - 2 * dot(ray.direction, hit.normal) * hit.normal);
+            Ray reflected_ray = Ray(hit.position + hit.normal * EPSILON, reflected_direction);
+            double3 reflected_color{0, 0, 0};
+
+            // Call trace recursively for reflection
+            trace(scene, reflected_ray, ray_depth + 1, &reflected_color, out_z_depth);
+            *out_color += reflected_color * material.k_reflection;
+
+            // Calculate refraction
+            double3 refracted_color{0, 0, 0};
+            if (material.refractive_index > 0.0) {
+				// Refractive index for air
+				double eta = 1.0 / material.refractive_index; 
+                double3 refracted_direction = refract(ray.direction, hit.normal, eta);
+                
+                // If the ray is refracted correctly
+                if (length(refracted_direction) > 0) {
+                    Ray refracted_ray = Ray(hit.position - hit.normal * EPSILON, refracted_direction);
+                    // Call trace recursively for refraction
+                    trace(scene, refracted_ray, ray_depth + 1, &refracted_color, out_z_depth);
+                    *out_color += refracted_color * material.k_refraction; 
+                }
+            }
+        }
+        
+        // Updates the ray depth
+        *out_z_depth = hit.depth;
+	} 
 
 }
+
+// // Code without recursive
+// void Raytracer::trace(const Scene& scene,
+// 					  Ray ray, int ray_depth,
+// 					  double3* out_color, double* out_z_depth)
+// {
+// 	Intersection hit;
+// 	// Fait appel à l'un des containers spécifiées.
+// 	if(scene.container->intersect(ray,EPSILON,*out_z_depth,&hit)) {		
+// 		Material& material = ResourceManager::Instance()->materials[hit.key_material];
+// 		//printf("INtersec\n");
+// 		// @@@@@@ VOTRE CODE ICI
+// 		// Déterminer la couleur associée à la réflection d'un rayon de manière récursive.
+		
+// 		// @@@@@@ VOTRE CODE ICI
+// 		// Déterminer la couleur associée à la réfraction d'un rayon de manière récursive.
+// 		// 
+// 		// Assumez que l'extérieur/l'air a un indice de réfraction de 1.
+// 		//
+// 		// Toutes les géométries sont des surfaces et non pas de volumes.
+
+//         *out_color = shade(scene, hit);
+//         *out_z_depth = hit.depth;
+// 	} 
+
+// }
 
 // Main function to calculate the new point in the plane
 double3 move_in_plane(const double3& sphere_center, const double3& plane_point, double radius, const double2& displacement) {
