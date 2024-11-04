@@ -59,7 +59,16 @@ bool Sphere::local_intersect(Ray ray, double t_min, double t_max, Intersection *
 // Occupez-vous de compléter cette fonction afin de calculer le AABB pour la sphère.
 // Il faut que le AABB englobe minimalement notre objet à moins que l'énoncé prononce le contraire (comme ici).
 AABB Sphere::compute_aabb() {
-	return Object::compute_aabb();
+    AABB local_aabb{double3{-radius, -radius, -radius}, double3{radius, radius, radius}};
+    
+    std::vector<double3> global_corners;
+    std::vector<double3> corners = retrieve_corners(local_aabb);
+    for(const auto& corner:corners) {
+        double3 global_corner = mul(transform, {corner, 1}).xyz();
+        global_corners.push_back(global_corner);
+    }
+
+	return construct_aabb(global_corners);
 }
 
 // @@@@@@ VOTRE CODE ICI
@@ -104,6 +113,11 @@ bool Quad::local_intersect(Ray ray,
     hit->position = intersection_point; 
     hit->normal = normal; 
 
+    // Calculer les coordonnées UV.
+    // On normalise les coordonnées du quad, qui s'étend de -half_size à +half_size.
+    hit->uv = double2{(intersection_point.x + half_size) / (2*half_size),
+                    (intersection_point.y + half_size) / (2*half_size)};
+
     return true;
 }
 
@@ -111,8 +125,23 @@ bool Quad::local_intersect(Ray ray,
 // Occupez-vous de compléter cette fonction afin de calculer le AABB pour le quad (rectangle).
 // Il faut que le AABB englobe minimalement notre objet à moins que l'énoncé prononce le contraire.
 AABB Quad::compute_aabb() {
-	return Object::compute_aabb();
-	//return Object::compute_aabb();
+    AABB local_aabb{double3{-half_size, -half_size, 0}, double3{half_size, half_size, 0}};
+    
+    std::vector<double3> global_corners;
+    std::vector<double3> corners = retrieve_corners(local_aabb);
+    for(const auto& corner:corners) {
+        double3 global_corner = mul(transform, {corner, 1}).xyz();
+        global_corners.push_back(global_corner);
+    }
+
+	AABB global_aabb = construct_aabb(global_corners);
+
+    const double epsilon = 1e-6;
+    if(global_aabb.min.x == global_aabb.max.x) global_aabb.max.x += epsilon;
+    if(global_aabb.min.y == global_aabb.max.y) global_aabb.max.y += epsilon;
+    if(global_aabb.min.z == global_aabb.max.z) global_aabb.max.z += epsilon;
+
+    return global_aabb;
 }
 
 // @@@@@@ VOTRE CODE ICI
@@ -175,7 +204,17 @@ bool Cylinder::local_intersect(Ray ray,
 // Occupez-vous de compléter cette fonction afin de calculer le AABB pour le cylindre.
 // Il faut que le AABB englobe minimalement notre objet à moins que l'énoncé prononce le contraire (comme ici).
 AABB Cylinder::compute_aabb() {
-	return Object::compute_aabb();
+    AABB local_aabb{double3{-radius, -half_height, -radius}, double3{radius, half_height, radius}};
+
+    std::vector<double3> global_corners;
+    std::vector<double3> corners = retrieve_corners(local_aabb);
+    for(const auto& corner:corners) {
+        double3 global_corner = mul(transform, {corner, 1}).xyz();
+        global_corners.push_back(global_corner);
+    }
+
+    return construct_aabb(global_corners);
+	// return Object::compute_aabb();
 }
 
 // @@@@@@ VOTRE CODE ICI
@@ -286,5 +325,12 @@ bool Mesh::intersect_triangle(Ray  ray,
 // Occupez-vous de compléter cette fonction afin de calculer le AABB pour le Mesh.
 // Il faut que le AABB englobe minimalement notre objet à moins que l'énoncé prononce le contraire.
 AABB Mesh::compute_aabb() {
-	return Object::compute_aabb();
+    std::vector<double3> global_positions;
+    for(const auto& position:positions) {
+        double3 global_position = mul(transform, {position, 1}).xyz();
+        global_positions.push_back(global_position);
+    }
+
+    return construct_aabb(global_positions);
+	// return Object::compute_aabb();
 }
