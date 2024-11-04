@@ -296,7 +296,7 @@ double facteur_lumiere(Scene scene, double3 point, SphericalLight ligth){
 		Ray ray_lumiere;
 
         // Create the ray with random direction
-        ray_lumiere = Ray(point, ray_end - point);
+        ray_lumiere = Ray(point, normalize(ray_end - point));
 
 		double ray_depth = length(ray_end - point);
 
