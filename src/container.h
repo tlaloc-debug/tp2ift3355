@@ -59,6 +59,7 @@ public:
         }
 
         root = recursive_build(bvhs, 0, bvhs.size(), 0);
+        // printf("BVH");
     };
     ~BVH() {};
 
