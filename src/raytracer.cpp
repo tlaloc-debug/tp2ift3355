@@ -78,7 +78,6 @@ void Raytracer::render(const Scene& scene, Frame* output)
 	// std::cout << "ancho " << width << "\n"; 
 	//std::cout << "aspect " << scene.camera.aspect << "\n"; 
 
-
 	//Itère sur tous les pixels de l'image.
     for(int y = 0; y < scene.resolution[1]; y++) {
 		if (y % 40){
@@ -114,12 +113,14 @@ void Raytracer::render(const Scene& scene, Frame* output)
 				ray = Ray(scene.camera.position, rayDirection);
 				double z_depth = scene.camera.z_far;
 
+				// CODE WITHOUT REFLECTION/REFRACTION
 				// if (scene.container->intersect(ray, EPSILON, z_depth, &hit)) {
 				// 	Material& material = ResourceManager::Instance()->materials[hit.key_material];
 				// 	// avg_ray_color += material.color_albedo;
 				// 	avg_ray_color += shade(scene, hit);
 				// 	avg_z_depth += hit.depth;
 				// }
+
 				trace(scene, ray, ray_depth, &ray_color, &z_depth);
 				avg_ray_color += ray_color;
 				avg_z_depth += z_depth;
@@ -237,8 +238,30 @@ void Raytracer::trace(const Scene& scene,
 
 // }
 
-// Main function to calculate the new point in the plane
-double3 move_in_plane(const double3& sphere_center, const double3& plane_point, double radius, const double2& displacement) {
+// // Main function to calculate the new point in the plane
+// double3 move_in_plane(const double3& sphere_center, const double3& plane_point, double radius, const double2& displacement) {
+//     // Normal vector to the plane
+//     double3 normal = normalize(plane_point - sphere_center);
+
+//     // "Right" vector in the plane (perpendicular to the normal and the Z axis)
+//     double3 arbitrary_direction = {0, 0, 1};
+//     double3 right_vector = normalize(cross(normal, arbitrary_direction));
+
+//     // Vector "up" in the plane (perpendicular to the normal and to the "right")
+//     double3 up_vector = cross(right_vector, normal);
+
+//     // Scale displacements by the radius of the sphere
+//     double3 right_movement = right_vector * (displacement.x * radius);
+//     double3 up_movement = up_vector * (displacement.y * radius);
+
+//     // Calculate the new point on the plane
+//     double3 new_point = sphere_center + right_movement + up_movement;
+//     return new_point;
+// }
+
+// PETITE OPTIMISATION, on calcule les vecteurs une fois 
+// Main function to calculate the vectors in the plane
+std::pair<double3, double3> get_vecteurs(const double3& sphere_center, const double3& plane_point) {
     // Normal vector to the plane
     double3 normal = normalize(plane_point - sphere_center);
 
@@ -249,26 +272,26 @@ double3 move_in_plane(const double3& sphere_center, const double3& plane_point, 
     // Vector "up" in the plane (perpendicular to the normal and to the "right")
     double3 up_vector = cross(right_vector, normal);
 
-    // Scale displacements by the radius of the sphere
-    double3 right_movement = right_vector * (displacement.x * radius);
-    double3 up_movement = up_vector * (displacement.y * radius);
-
-    // Calculate the new point on the plane
-    double3 new_point = sphere_center + right_movement + up_movement;
-    return new_point;
+    // Return only the right and up vectors
+    return {right_vector, up_vector};
 }
 
 double facteur_lumiere(Scene scene, double3 point, SphericalLight ligth){
 
-	int total_rays = 10;
-    int misses = 0;
+	//if (ligth.radius == 0) return 1;
 
-    for (int i = 1; i <= total_rays; ++i) {
+    int misses = 0;
+	auto [right_vector, up_vector] = get_vecteurs(ligth.position, point);
+
+    for (int i = 1; i <= RAY_QTE; ++i) {
         // Generate a random point on the unit disk
         double2 random_dir = random_in_unit_disk();
 
 		// Get point position on scene
-		double3 ray_end = move_in_plane(ligth.position, point, ligth.radius, random_dir);
+		// double3 ray_end = move_in_plane(ligth.position, point, ligth.radius, random_dir);
+		double3 right_movement = right_vector * (random_dir.x * ligth.radius);
+		double3 up_movement = up_vector * (random_dir.y * ligth.radius);
+		double3 ray_end = ligth.position + right_movement + up_movement;
 
 		Ray ray_lumiere;
 
@@ -285,7 +308,7 @@ double facteur_lumiere(Scene scene, double3 point, SphericalLight ligth){
     }
 
     // Calculate the proportion of rays that miss
-    double miss_ratio = static_cast<double>(misses) / total_rays;
+    double miss_ratio = static_cast<double>(misses) / RAY_QTE;
 	double porcentage_lumiere = 1 - miss_ratio;
 
 	return porcentage_lumiere;
@@ -327,48 +350,54 @@ double3 Raytracer::shade(const Scene& scene, Intersection hit)
     // Iterate through each light in the scene
     for (const auto& light : scene.lights) {
 
-		// ================= verifier cette partie du code, cela donne de problems avec le cilindre ====================
+		double3 lightDir = normalize(light.position - hit.position);
 
-		penumbra = 1;
+		// ================= CODE OMBRE SANS PENOMBRE ====================
 
-        // Light direction and distance to the light source
-        double3 lightDir = normalize(light.position - hit.position);
-        double lightDistance = length(light.position - hit.position);
+        // // Light direction and distance to the light source
+        
+        // double lightDistance = length(light.position - hit.position);
 
-        // Shadow ray: emitted from the hit position towards the light source
-        // Offset the starting position to avoid "surface acne" issues
-        Ray shadowRay(hit.position + EPSILON * hit.normal, lightDir);
+        // // Shadow ray: emitted from the hit position towards the light source
+        // // Offset the starting position to avoid "surface acne" issues
+        // Ray shadowRay(hit.position + EPSILON * hit.normal, lightDir);
 
-        // Check if any object obstructs the shadow ray up to the light source
-        bool in_shadow = false;
-        // for (const auto& obj : scene.objects) {
-        //     // If the shadow ray intersects an object within the light distance, the point is in shadow
-        //     if (obj->intersect(shadowRay, 1e-6, lightDistance)) {
-        //         in_shadow = true;
-        //         break;
-        //     }
+        // // Check if any object obstructs the shadow ray up to the light source
+        // bool in_shadow = false;
+        // // for (const auto& obj : scene.objects) {
+        // //     // If the shadow ray intersects an object within the light distance, the point is in shadow
+        // //     if (obj->intersect(shadowRay, 1e-6, lightDistance)) {
+        // //         in_shadow = true;
+        // //         break;
+        // //     }
+        // // }
+		// if (scene.container->intersect(shadowRay, EPSILON, lightDistance, &hit)) in_shadow = true;
+
+        // // If the point is in shadow, skip diffuse and specular contributions for this light
+        // if (in_shadow) {
+        //     continue;
         // }
-		if (scene.container->intersect(shadowRay, EPSILON, lightDistance, &hit)) in_shadow = true;
-
-        // If the point is in shadow, skip diffuse and specular contributions for this light
-        if (in_shadow) {
-            continue;
-        }
 
 		// ===============================================================================================
 
 		penumbra = facteur_lumiere(scene, hit.position, light);
 		//penumbra = 1;
 
-        // Diffuse component: 2 * k_dλ * Sλ * (N ⋅ L_i)
-        double nDotL = std::max(0.0, dot(hit.normal, lightDir));
-        diffuse += 2 * material.k_diffuse * material.color_albedo * nDotL * penumbra;
+        // Diffuse component: k_dλ * Sλ * (N ⋅ L_i)
+		double nDotL = std::max(0.0, dot(hit.normal, lightDir));
+		diffuse += material.k_diffuse * material.color_albedo * nDotL * penumbra;
 
-        // Specular component: k_sλ * [ m * Sλ + (1 - m) ] * (R_i ⋅ E)
-        double3 R_i = normalize(2 * nDotL * hit.normal - lightDir);
-        double rDotE = std::max(0.0, dot(R_i, Eye));
-        double m = material.k_reflection;
-        specular += material.k_specular * ((m * material.color_albedo) + (1 - m)) * rDotE * penumbra;
+        // Specular component: k_sλ * [ m * Sλ + (1 - m) ] * (R_i ⋅ E)^shininess
+		double3 R_i = normalize(2 * nDotL * hit.normal - lightDir);
+		double rDotE = std::max(0.0, dot(R_i, Eye));
+		double m = material.metallic;  // Usar el factor de metallicidad
+		double shininess = material.shininess;
+
+		rDotE = pow(rDotE, shininess);
+
+		// Calcular el componente especular usando el color del material y metallicidad
+		specular += material.k_specular * ((m * material.color_albedo) + (1 - m)) * rDotE * penumbra;
+
     }
 
     // Sum the components to get the final color

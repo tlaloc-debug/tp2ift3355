@@ -134,7 +134,6 @@ bool Cylinder::local_intersect(Ray ray,
     double c = origin.x * origin.x + origin.z * origin.z - radius * radius;
 
     double discriminant = b * b - 4 * a * c;
-
     if (discriminant < 0) return false;
 
     // Calculate the two possible solutions (t0 and t1)
@@ -144,29 +143,24 @@ bool Cylinder::local_intersect(Ray ray,
 
     if (t0 > t1) std::swap(t0, t1);
 
-    // Check the nearest intersection that is within range
+    // Check if t0 is within the height limits
     double y0 = origin.y + t0 * direction.y;
-    double y1 = origin.y + t1 * direction.y;
-
-    if ((y0 < -half_height || y0 > half_height) && (y1 < -half_height || y1 > half_height)) {
-        return false; 
+    if (y0 < -half_height || y0 > half_height) {
+        // Check t1 as the next candidate
+        double y1 = origin.y + t1 * direction.y;
+        if (y1 < -half_height || y1 > half_height) {
+            return false;
+        }
+        t0 = t1; // Use t1 if t0 is out of bounds
     }
 
-    // Find the first value of t that is within the height limits
-    if (y0 >= -half_height && y0 <= half_height) {
-        // t0 is within the height of the cylinder
-        hit->depth = t0;
-    } else {
-        // t1 is within the height of the cylinder
-        hit->depth = t1;
-    }
+    // Verify if t0 is within [t_min, t_max] range
+    if (t0 < t_min || t0 > t_max) return false;
 
-    // Calculates the position of the intersection
-    hit->position = ray.origin + hit->depth * ray.direction;
-
-    // Calculate the normal at the intersection point
-    // Project the intersection point onto the plane of the cylinder
-    hit->normal = normalize(double3(hit->position.x, 0, hit->position.z)); // Normal en la superficie
+    // Update the intersection details
+    hit->depth = t0;
+    hit->position = ray.origin + t0 * ray.direction;
+    hit->normal = normalize(double3(hit->position.x, 0, hit->position.z)); // Normal at the surface
 
     return true;
 }
