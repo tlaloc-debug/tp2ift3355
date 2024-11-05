@@ -10,7 +10,7 @@ ambient_light [0.1 0.1 0.1]
 Perspective 30.0 1.33 3 20
 
 # Comme gluLookAt.
-LookAt  0  1.25  5 # position de l'oeil
+LookAt  0  1.25  15 # position de l'oeil
         0  0 0 # position du focus
         0 0.992278 -0.124035 # Vecteur up
 
