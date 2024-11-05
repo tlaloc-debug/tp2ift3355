@@ -81,21 +81,17 @@ bool Quad::local_intersect(Ray ray,
 							double t_min, double t_max, 
 							Intersection *hit)
 {
-    //printf("Quad");
-	// The normal of the plane is in the Z+ direction (0, 0, 1)
-    double3 normal(0, 0, 1);
     
-    // The distance from the origin of the square to the ray (assuming the square is at Z=0)
-    double d = dot(normal, double3(0, 0, 0));
-
+    double3 normal(0, 0, 1); 
+    
     // Calculate the denominator for the equation of the plane
     double denominator = dot(normal, ray.direction);
     
     // If the ray is parallel to the plane (denominator is zero), there is no intersection
-    if (fabs(denominator) < 1e-6) return false;
+    if (fabs(denominator) < 0) return false;
 
     // Calculate the value of t at the intersection
-    double t = (d - dot(normal, ray.origin)) / denominator;
+    double t = -dot(normal, ray.origin) / denominator;
 
     // Check if t is within the range [t_min, t_max]
     if (t < t_min || t > t_max) return false;
@@ -109,14 +105,21 @@ bool Quad::local_intersect(Ray ray,
         return false; 
     }
 
+    double3 flip_normal = normalize(mul(n_transform, normal)); 
+    
+    // Invert normal if it points in the same direction as the ray
+    if (dot(normal, ray.direction) > 0) {
+        normal = -normal;
+        
+    }
+
     hit->depth = t;
     hit->position = intersection_point; 
     hit->normal = normal; 
 
-    // Calculer les coordonnées UV.
-    // On normalise les coordonnées du quad, qui s'étend de -half_size à +half_size.
+    // UV coordinates (normalized for the quad, which extends from -half_size to +half_size)
     hit->uv = double2{(intersection_point.x + half_size) / (2*half_size),
-                    (intersection_point.y + half_size) / (2*half_size)};
+                      (intersection_point.y + half_size) / (2*half_size)};
 
     return true;
 }
