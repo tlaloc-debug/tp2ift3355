@@ -300,8 +300,14 @@ double facteur_lumiere(Scene scene, double3 point, SphericalLight ligth){
 	double porcentage_lumiere = 1 - miss_ratio;
 
 	return porcentage_lumiere;
-
 }
+
+int clamp(int value, int min, int max) {
+    if (value < min) return min;
+    if (value > max) return max;
+    return value;
+}
+
 
 // @@@@@@ VOTRE CODE ICI
 // Veuillez remplir les objectifs suivants:
@@ -322,6 +328,28 @@ double3 Raytracer::shade(const Scene& scene, Intersection hit)
 {
 	// lorsque vous serez rendu à la partie texture.
 	Material& material = ResourceManager::Instance()->materials[hit.key_material]; 
+	double3 base_color;
+
+	 // Vérifie si une texture est présente en utilisant les dimensions
+    if (material.texture_albedo.width() > 0 && material.texture_albedo.height() > 0) {
+        // Convertit les coordonnées UV en coordonnées de la texture
+        int tex_x = static_cast<int>(hit.uv.x * material.texture_albedo.width());
+        int tex_y = static_cast<int>(hit.uv.y * material.texture_albedo.height());
+
+        // Assure que les coordonnées restent dans les limites de la texture
+        tex_x = clamp(tex_x, 0, material.texture_albedo.width() - 1);
+        tex_y = clamp(tex_y, 0, material.texture_albedo.height() - 1);
+
+        // Récupère la couleur du pixel de la texture
+        rgb_t tex_color;
+        material.texture_albedo.get_pixel(tex_x, tex_y, tex_color);
+
+        // Convertit la couleur de [0..255] à [0..1]
+        base_color = double3(tex_color.red / 255.0, tex_color.green / 255.0, tex_color.blue / 255.0);
+    } else {
+        // Si la texture est absente, utilise la couleur albedo du matériau
+        base_color = material.color_albedo;
+    }
 	
 	double3 ambient(0, 0, 0);
     double3 diffuse(0, 0, 0);
@@ -331,7 +359,7 @@ double3 Raytracer::shade(const Scene& scene, Intersection hit)
     double3 Eye = normalize(scene.camera.position - hit.position);
 
     // Ambient light calculation: L_aλ * k_aλ * Sλ
-    ambient = scene.ambient_light * material.k_ambient * material.color_albedo;
+    ambient = scene.ambient_light * material.k_ambient * base_color;
 
 	double penumbra;
 
@@ -373,7 +401,7 @@ double3 Raytracer::shade(const Scene& scene, Intersection hit)
 
         // Diffuse component: k_dλ * Sλ * (N ⋅ L_i)
 		double nDotL = std::max(0.0, dot(hit.normal, lightDir));
-		diffuse += material.k_diffuse * material.color_albedo * nDotL * penumbra;
+		diffuse += material.k_diffuse * base_color * nDotL * penumbra;
 
         // Specular component: k_sλ * [ m * Sλ + (1 - m) ] * (R_i ⋅ E)^shininess
 		double3 R_i = normalize(2 * nDotL * hit.normal - lightDir);
@@ -384,7 +412,7 @@ double3 Raytracer::shade(const Scene& scene, Intersection hit)
 		rDotE = pow(rDotE, shininess);
 
 		// Calcular el componente especular usando el color del material y metallicidad
-		specular += material.k_specular * ((m * material.color_albedo) + (1 - m)) * rDotE * penumbra;
+		specular += material.k_specular * ((m * base_color) + (1 - m)) * rDotE * penumbra;
 
     }
 

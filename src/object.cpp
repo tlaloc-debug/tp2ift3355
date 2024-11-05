@@ -2,6 +2,11 @@
 #include "linalg/linalg.h"
 using namespace linalg::aliases;
 
+// Définit M_PI si il n'est pas déja définit. 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 // Fonction retournant soit la valeur v0 ou v1 selon le signe.
 int rsign(double value, double v0, double v1) {
 	return (int(std::signbit(value)) * (v1-v0)) + v0;
@@ -50,6 +55,20 @@ bool Sphere::local_intersect(Ray ray, double t_min, double t_max, Intersection *
     hit->position = ray.origin + t0 * ray.direction; // Position of the intersection
 	//hit->normal = normalize(hit->position - this->center); // Vector normal (normalizado)
     hit->normal = normalize(hit->position); 
+
+    // Calcul des coordonnées UV en utilisant les coordonnées sphériques.
+    double theta = acos(hit->normal.y); 
+    double phi = atan2(hit->normal.z, hit->normal.x) + M_PI / 2; 
+
+    // Normalise phi pour qu'il reste dans la plage [-pi, pi]
+    if (phi > M_PI) {
+        phi -= 2 * M_PI;
+    } else if (phi < -M_PI) {
+        phi += 2 * M_PI;
+    }
+
+    // On normalise les coordonnées de la sphere.
+    hit->uv = double2{1-(phi + M_PI) / (2 * M_PI), theta / M_PI};
 
     return true;
 }
@@ -119,7 +138,7 @@ bool Quad::local_intersect(Ray ray,
 
     // UV coordinates (normalized for the quad, which extends from -half_size to +half_size)
     hit->uv = double2{(intersection_point.x + half_size) / (2*half_size),
-                      (intersection_point.y + half_size) / (2*half_size)};
+                        1-(intersection_point.y + half_size) / (2*half_size)};
 
     return true;
 }
@@ -193,6 +212,19 @@ bool Cylinder::local_intersect(Ray ray,
     hit->depth = t0;
     hit->position = ray.origin + t0 * ray.direction;
     hit->normal = normalize(double3(hit->position.x, 0, hit->position.z)); // Normal at the surface
+
+    // Calcul des coordonnées UV en utilisant les coordonnées cylindriques.
+    double phi = atan2(hit->position.z, hit->position.x) + M_PI;
+
+    // Normalise phi pour qu'il reste dans la plage [-pi, pi]
+    if (phi > M_PI) {
+        phi -= 2 * M_PI;
+    } else if (phi < -M_PI) {
+        phi += 2 * M_PI;
+    }
+
+    hit->uv.x = 1-(phi + M_PI) / (2 * M_PI);  
+    hit->uv.y = 1-(hit->position.y + half_height) / (2 * half_height); 
 
     return true;
 }
@@ -311,9 +343,15 @@ bool Mesh::intersect_triangle(Ray  ray,
     // Calculate the normal of the triangle
     hit->normal = normalize(cross(edge1, edge2)); // Normal del triángulo
 
-    // Opcional: calcular coordenadas de textura, si son necesarias
-    // Esto puede variar dependiendo de cómo almacenes las coordenadas UV.
-    // hit->tex_coords = ...; // Asignar coordenadas de textura si es necesario.
+    // Coordonnées barycentriques
+    double w = 1 - u - v;
+
+    // Interpolation des coordonnées UV
+    double2 uv0 = tex_coords[tri[0].ti];
+    double2 uv1 = tex_coords[tri[1].ti];
+    double2 uv2 = tex_coords[tri[2].ti];
+    hit->uv.x = w * uv0.x + u * uv1.x + v * uv2.x;
+    hit->uv.y = w * uv0.y + u * uv1.y + v * uv2.y;
 
     return true; 
 }
