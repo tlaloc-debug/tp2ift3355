@@ -77,6 +77,13 @@ void Raytracer::render(const Scene& scene, Frame* output)
 	// std::cout << "ancho " << width << "\n"; 
 	//std::cout << "aspect " << scene.camera.aspect << "\n"; 
 
+	double disk_radius = 0.0;
+	bool depth_of_field_enabled = scene.camera.defocus_angle > 0.0;
+	// Calcul le rayon du dique de délocalisation si l'angles de défocalisation n'est pas nul.
+	if(depth_of_field_enabled) {
+		disk_radius = tan(deg2rad(scene.camera.defocus_angle / 2)) * scene.camera.focus_distance;
+	}
+
 	//Itère sur tous les pixels de l'image.
     for(int y = 0; y < scene.resolution[1]; y++) {
 		if (y % 40){
@@ -107,10 +114,23 @@ void Raytracer::render(const Scene& scene, Frame* output)
 				// double3 rayXDirection{xDirection, 0, 0};
 				// double3 rayYDirection{0, yDirection, 0};
 
-				double3 rayDirection = normalize((scene.camera.position + uVec*xDirection + vVec*yDirection + wVec*scene.camera.z_near) - scene.camera.position);
-				Intersection hit;
-				//std::cout << "Otigin " << rayOrigin.x << "," << rayOrigin.y << "," << rayOrigin.z << "\n"; 
-				ray = Ray(rayOrigin, rayDirection);
+ 				double3 primaryDirection = normalize((scene.camera.position + uVec*xDirection + vVec*yDirection + wVec*scene.camera.z_near) - scene.camera.position);
+				if (depth_of_field_enabled) {
+                    // Calcul une position perturbée sur le disque de délocalisation.
+                    double2 random_disk_point = random_in_unit_disk() * disk_radius;
+                    double3 offset = uVec * random_disk_point.x + vVec * random_disk_point.y;
+
+                    // Déplace l'origine du rayon et réajuste la direction pour pointer vers le point focal.
+                    double3 perturbed_origin = scene.camera.position + offset;
+                    double3 focus_point = scene.camera.position + primaryDirection * scene.camera.focus_distance;
+                    double3 perturbed_direction = normalize(focus_point - perturbed_origin);
+
+                    // Crée un rayon avec l'origine perturbée et la direction ajustée.
+                    ray = Ray(perturbed_origin, perturbed_direction);
+                } else {
+                    // Si la profondeur de champ est désactivée, on utilise l'origine normale de la caméra.
+                    ray = Ray(rayOrigin, primaryDirection);
+                }
 				double z_depth = scene.camera.z_far;
 
 				// // CODE WITHOUT REFLECTION/REFRACTION
