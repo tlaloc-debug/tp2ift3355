@@ -123,13 +123,10 @@ bool Quad::local_intersect(Ray ray,
         intersection_point.y < -half_size || intersection_point.y > half_size) {
         return false; 
     }
-
-    double3 flip_normal = normalize(mul(n_transform, normal)); 
     
     // Invert normal if it points in the same direction as the ray
     if (dot(normal, ray.direction) > 0) {
-        normal = -normal;
-        
+        normal = -normal;   
     }
 
     hit->depth = t;

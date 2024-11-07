@@ -1,44 +1,44 @@
 [
 {
-  "directory": "C:/Users/maxim/OneDrive/Bureau/tp2ift3355-3/build",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/RAY.dir/includes_CXX.rsp -g -std=c++17 -o CMakeFiles\\RAY.dir\\src\\main.cpp.obj -c C:\\Users\\maxim\\OneDrive\\Bureau\\tp2ift3355-3\\src\\main.cpp",
-  "file": "C:/Users/maxim/OneDrive/Bureau/tp2ift3355-3/src/main.cpp",
-  "output": "CMakeFiles/RAY.dir/src/main.cpp.obj"
+  "directory": "/home/erick/Desktop/24_ift3355_tp2/build",
+  "command": "/usr/bin/g++  -I/home/erick/Desktop/24_ift3355_tp2/src -I/home/erick/Desktop/24_ift3355_tp2/extern -g -std=c++17 -o CMakeFiles/RAY.dir/src/main.cpp.o -c /home/erick/Desktop/24_ift3355_tp2/src/main.cpp",
+  "file": "/home/erick/Desktop/24_ift3355_tp2/src/main.cpp",
+  "output": "CMakeFiles/RAY.dir/src/main.cpp.o"
 },
 {
-  "directory": "C:/Users/maxim/OneDrive/Bureau/tp2ift3355-3/build",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/RAY.dir/includes_CXX.rsp -g -std=c++17 -o CMakeFiles\\RAY.dir\\src\\object.cpp.obj -c C:\\Users\\maxim\\OneDrive\\Bureau\\tp2ift3355-3\\src\\object.cpp",
-  "file": "C:/Users/maxim/OneDrive/Bureau/tp2ift3355-3/src/object.cpp",
-  "output": "CMakeFiles/RAY.dir/src/object.cpp.obj"
+  "directory": "/home/erick/Desktop/24_ift3355_tp2/build",
+  "command": "/usr/bin/g++  -I/home/erick/Desktop/24_ift3355_tp2/src -I/home/erick/Desktop/24_ift3355_tp2/extern -g -std=c++17 -o CMakeFiles/RAY.dir/src/object.cpp.o -c /home/erick/Desktop/24_ift3355_tp2/src/object.cpp",
+  "file": "/home/erick/Desktop/24_ift3355_tp2/src/object.cpp",
+  "output": "CMakeFiles/RAY.dir/src/object.cpp.o"
 },
 {
-  "directory": "C:/Users/maxim/OneDrive/Bureau/tp2ift3355-3/build",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/RAY.dir/includes_CXX.rsp -g -std=c++17 -o CMakeFiles\\RAY.dir\\src\\parser.cpp.obj -c C:\\Users\\maxim\\OneDrive\\Bureau\\tp2ift3355-3\\src\\parser.cpp",
-  "file": "C:/Users/maxim/OneDrive/Bureau/tp2ift3355-3/src/parser.cpp",
-  "output": "CMakeFiles/RAY.dir/src/parser.cpp.obj"
+  "directory": "/home/erick/Desktop/24_ift3355_tp2/build",
+  "command": "/usr/bin/g++  -I/home/erick/Desktop/24_ift3355_tp2/src -I/home/erick/Desktop/24_ift3355_tp2/extern -g -std=c++17 -o CMakeFiles/RAY.dir/src/parser.cpp.o -c /home/erick/Desktop/24_ift3355_tp2/src/parser.cpp",
+  "file": "/home/erick/Desktop/24_ift3355_tp2/src/parser.cpp",
+  "output": "CMakeFiles/RAY.dir/src/parser.cpp.o"
 },
 {
-  "directory": "C:/Users/maxim/OneDrive/Bureau/tp2ift3355-3/build",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/RAY.dir/includes_CXX.rsp -g -std=c++17 -o CMakeFiles\\RAY.dir\\src\\raytracer.cpp.obj -c C:\\Users\\maxim\\OneDrive\\Bureau\\tp2ift3355-3\\src\\raytracer.cpp",
-  "file": "C:/Users/maxim/OneDrive/Bureau/tp2ift3355-3/src/raytracer.cpp",
-  "output": "CMakeFiles/RAY.dir/src/raytracer.cpp.obj"
+  "directory": "/home/erick/Desktop/24_ift3355_tp2/build",
+  "command": "/usr/bin/g++  -I/home/erick/Desktop/24_ift3355_tp2/src -I/home/erick/Desktop/24_ift3355_tp2/extern -g -std=c++17 -o CMakeFiles/RAY.dir/src/raytracer.cpp.o -c /home/erick/Desktop/24_ift3355_tp2/src/raytracer.cpp",
+  "file": "/home/erick/Desktop/24_ift3355_tp2/src/raytracer.cpp",
+  "output": "CMakeFiles/RAY.dir/src/raytracer.cpp.o"
 },
 {
-  "directory": "C:/Users/maxim/OneDrive/Bureau/tp2ift3355-3/build",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/RAY.dir/includes_CXX.rsp -g -std=c++17 -o CMakeFiles\\RAY.dir\\src\\container.cpp.obj -c C:\\Users\\maxim\\OneDrive\\Bureau\\tp2ift3355-3\\src\\container.cpp",
-  "file": "C:/Users/maxim/OneDrive/Bureau/tp2ift3355-3/src/container.cpp",
-  "output": "CMakeFiles/RAY.dir/src/container.cpp.obj"
+  "directory": "/home/erick/Desktop/24_ift3355_tp2/build",
+  "command": "/usr/bin/g++  -I/home/erick/Desktop/24_ift3355_tp2/src -I/home/erick/Desktop/24_ift3355_tp2/extern -g -std=c++17 -o CMakeFiles/RAY.dir/src/container.cpp.o -c /home/erick/Desktop/24_ift3355_tp2/src/container.cpp",
+  "file": "/home/erick/Desktop/24_ift3355_tp2/src/container.cpp",
+  "output": "CMakeFiles/RAY.dir/src/container.cpp.o"
 },
 {
-  "directory": "C:/Users/maxim/OneDrive/Bureau/tp2ift3355-3/build",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/RAY.dir/includes_CXX.rsp -g -std=c++17 -o CMakeFiles\\RAY.dir\\src\\aabb.cpp.obj -c C:\\Users\\maxim\\OneDrive\\Bureau\\tp2ift3355-3\\src\\aabb.cpp",
-  "file": "C:/Users/maxim/OneDrive/Bureau/tp2ift3355-3/src/aabb.cpp",
-  "output": "CMakeFiles/RAY.dir/src/aabb.cpp.obj"
+  "directory": "/home/erick/Desktop/24_ift3355_tp2/build",
+  "command": "/usr/bin/g++  -I/home/erick/Desktop/24_ift3355_tp2/src -I/home/erick/Desktop/24_ift3355_tp2/extern -g -std=c++17 -o CMakeFiles/RAY.dir/src/aabb.cpp.o -c /home/erick/Desktop/24_ift3355_tp2/src/aabb.cpp",
+  "file": "/home/erick/Desktop/24_ift3355_tp2/src/aabb.cpp",
+  "output": "CMakeFiles/RAY.dir/src/aabb.cpp.o"
 },
 {
-  "directory": "C:/Users/maxim/OneDrive/Bureau/tp2ift3355-3/build",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/RAY.dir/includes_CXX.rsp -g -std=c++17 -o CMakeFiles\\RAY.dir\\src\\resource_manager.cpp.obj -c C:\\Users\\maxim\\OneDrive\\Bureau\\tp2ift3355-3\\src\\resource_manager.cpp",
-  "file": "C:/Users/maxim/OneDrive/Bureau/tp2ift3355-3/src/resource_manager.cpp",
-  "output": "CMakeFiles/RAY.dir/src/resource_manager.cpp.obj"
+  "directory": "/home/erick/Desktop/24_ift3355_tp2/build",
+  "command": "/usr/bin/g++  -I/home/erick/Desktop/24_ift3355_tp2/src -I/home/erick/Desktop/24_ift3355_tp2/extern -g -std=c++17 -o CMakeFiles/RAY.dir/src/resource_manager.cpp.o -c /home/erick/Desktop/24_ift3355_tp2/src/resource_manager.cpp",
+  "file": "/home/erick/Desktop/24_ift3355_tp2/src/resource_manager.cpp",
+  "output": "CMakeFiles/RAY.dir/src/resource_manager.cpp.o"
 }
 ]
