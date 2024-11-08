@@ -1,5 +1,5 @@
 CMakeFiles/RAY.dir/src/main.cpp.obj: \
- C:\Users\maxim\OneDrive\Bureau\tp2ift3355-3\src\main.cpp \
+ C:\Users\maxim\OneDrive\Bureau\tp2ift3355-4\src\main.cpp \
  C:/msys64/ucrt64/include/c++/13.2.0/cstdio \
  C:/msys64/ucrt64/include/c++/13.2.0/x86_64-w64-mingw32/bits/c++config.h \
  C:/msys64/ucrt64/include/c++/13.2.0/x86_64-w64-mingw32/bits/os_defines.h \
@@ -210,22 +210,22 @@ CMakeFiles/RAY.dir/src/main.cpp.obj: \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/unique_ptr.h \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/fs_dir.h \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/fs_ops.h \
- C:\Users\maxim\OneDrive\Bureau\tp2ift3355-3\src\parser.h \
+ C:\Users\maxim\OneDrive\Bureau\tp2ift3355-4\src\parser.h \
  C:/msys64/ucrt64/include/c++/13.2.0/climits \
  C:/msys64/ucrt64/include/c++/13.2.0/deque \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/stl_deque.h \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/deque.tcc \
- C:/Users/maxim/OneDrive/Bureau/tp2ift3355-3/extern/bitmap_image/bitmap_image.h \
+ C:/Users/maxim/OneDrive/Bureau/tp2ift3355-4/extern/bitmap_image/bitmap_image.h \
  C:/msys64/ucrt64/include/c++/13.2.0/cstring \
  C:/msys64/ucrt64/include/string.h \
  C:/msys64/ucrt64/include/sec_api/string_s.h \
  C:/msys64/ucrt64/include/c++/13.2.0/iterator \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/stream_iterator.h \
- C:\Users\maxim\OneDrive\Bureau\tp2ift3355-3\src\scene.h \
- C:\Users\maxim\OneDrive\Bureau\tp2ift3355-3\src\resource_manager.h \
- C:\Users\maxim\OneDrive\Bureau\tp2ift3355-3\src\object.h \
- C:\Users\maxim\OneDrive\Bureau\tp2ift3355-3\src\basic.h \
- C:/Users/maxim/OneDrive/Bureau/tp2ift3355-3/extern/linalg/linalg.h \
+ C:\Users\maxim\OneDrive\Bureau\tp2ift3355-4\src\scene.h \
+ C:\Users\maxim\OneDrive\Bureau\tp2ift3355-4\src\resource_manager.h \
+ C:\Users\maxim\OneDrive\Bureau\tp2ift3355-4\src\object.h \
+ C:\Users\maxim\OneDrive\Bureau\tp2ift3355-4\src\basic.h \
+ C:/Users/maxim/OneDrive/Bureau/tp2ift3355-4/extern/linalg/linalg.h \
  C:/msys64/ucrt64/include/c++/13.2.0/array \
  C:/msys64/ucrt64/include/c++/13.2.0/compare \
  C:/msys64/ucrt64/include/c++/13.2.0/functional \
@@ -235,7 +235,7 @@ CMakeFiles/RAY.dir/src/main.cpp.obj: \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/hashtable.h \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/hashtable_policy.h \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/enable_special_members.h \
- C:\Users\maxim\OneDrive\Bureau\tp2ift3355-3\src\aabb.h \
- C:\Users\maxim\OneDrive\Bureau\tp2ift3355-3\src\container.h \
- C:\Users\maxim\OneDrive\Bureau\tp2ift3355-3\src\raytracer.h \
- C:\Users\maxim\OneDrive\Bureau\tp2ift3355-3\src\frame.h
+ C:\Users\maxim\OneDrive\Bureau\tp2ift3355-4\src\aabb.h \
+ C:\Users\maxim\OneDrive\Bureau\tp2ift3355-4\src\container.h \
+ C:\Users\maxim\OneDrive\Bureau\tp2ift3355-4\src\raytracer.h \
+ C:\Users\maxim\OneDrive\Bureau\tp2ift3355-4\src\frame.h

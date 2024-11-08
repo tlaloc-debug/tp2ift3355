@@ -63,22 +63,17 @@ void Raytracer::render(const Scene& scene, Frame* output)
 	// Calculez les paramètres de la caméra pour les rayons.
 	Camera camera;
 
+	// Vecteurs de direction de la caméra : calcul des axes u, v et w pour orienter les rayons selon l'orientation de la caméra.
 	double3 vVec = normalize(scene.camera.up); 								//Direction Y de la caméra
 	double3 wVec = normalize(scene.camera.center - scene.camera.position); 	//Direction Z de la caméra
-	double3 uVec = normalize(cross(wVec,vVec)); 							//Direction X de la caméra
-	double3 rayOrigin = scene.camera.position;	
-	//toString(wVec);
-							
-	// double y_shift = 2.0 / scene.resolution[1];
-	// double x_shift = 2.0 / scene.resolution[0];
-	double height = 2 * scene.camera.z_near * tan(deg2rad(scene.camera.fovy/2));
-	double width = height * scene.camera.aspect;
-	// std::cout << "altura " << height << "\n"; 
-	// std::cout << "ancho " << width << "\n"; 
-	//std::cout << "aspect " << scene.camera.aspect << "\n"; 
+	double3 uVec = normalize(cross(wVec,vVec));								//Direction X de la caméra
+	double3 rayOrigin = scene.camera.position;		
 
+	double height = 2 * scene.camera.z_near * tan(deg2rad(scene.camera.fovy/2)); // Hauteur du plan d'image
+	double width = height * scene.camera.aspect; // Largeur du plan d'image
 	double disk_radius = 0.0;
 	bool depth_of_field_enabled = scene.camera.defocus_angle > 0.0;
+
 	// Calcul le rayon du dique de délocalisation si l'angles de défocalisation n'est pas nul.
 	if(depth_of_field_enabled) {
 		disk_radius = tan(deg2rad(scene.camera.defocus_angle / 2)) * scene.camera.focus_distance;
@@ -100,7 +95,7 @@ void Raytracer::render(const Scene& scene, Frame* output)
 				Ray ray;
 				// Initialise la profondeur de récursivité du rayon.
 				int ray_depth = 0;
-				// Initialize la couleur du rayon
+				// Initialize la couleur du rayon.
 				double3 ray_color{0,0,0};
 
 				// @@@@@@ VOTRE CODE ICI
@@ -108,11 +103,10 @@ void Raytracer::render(const Scene& scene, Frame* output)
 				// Lancez le rayon de manière uniformément aléatoire à l'intérieur du pixel dans la zone délimité par jitter_radius. 
 				//Faites la moyenne des différentes couleurs obtenues suite à la récursion.
 				//printf("random : %f", rand_double());
+
+				// Position aléatoire dans le pixel pour éviter les effets d'aliasing.
 				double xDirection = (x+(rand_double()-0.5)-scene.resolution[0]/2) * (width/scene.resolution[0]);
 				double yDirection = (y+(rand_double()-0.5)-scene.resolution[1]/2) * (height/scene.resolution[1]);
-				//Intersection hit;
-				// double3 rayXDirection{xDirection, 0, 0};
-				// double3 rayYDirection{0, yDirection, 0};
 
  				double3 primaryDirection = normalize((scene.camera.position + uVec*xDirection + vVec*yDirection + wVec*scene.camera.z_near) - scene.camera.position);
 				if (depth_of_field_enabled) {
@@ -133,19 +127,12 @@ void Raytracer::render(const Scene& scene, Frame* output)
                 }
 				double z_depth = scene.camera.z_far;
 
-				// // CODE WITHOUT REFLECTION/REFRACTION
-				// if (scene.container->intersect(ray, EPSILON, z_depth, &hit)) {
-				// 	Material& material = ResourceManager::Instance()->materials[hit.key_material];
-				// 	// avg_ray_color += material.color_albedo;
-				// 	avg_ray_color += shade(scene, hit);
-				// 	avg_z_depth += hit.depth;
-				// }
-
 				trace(scene, ray, ray_depth, &ray_color, &z_depth);
 				avg_ray_color += ray_color;
 				avg_z_depth += z_depth;
 			}
 
+			// On fait la moyenne des valeurs de profondeur et de couleur après l'échantillonnage.
 			avg_z_depth = avg_z_depth / scene.samples_per_pixel;
 			avg_ray_color = avg_ray_color / scene.samples_per_pixel;
 
@@ -154,7 +141,7 @@ void Raytracer::render(const Scene& scene, Frame* output)
 				avg_z_depth < z_buffer[x + y*scene.resolution[0]]) {
 				z_buffer[x + y*scene.resolution[0]] = avg_z_depth;
 
-				// Met à jour la couleur de l'image (et sa profondeur)
+				// Met à jour la couleur de l'image (et sa profondeur).
 				output->set_color_pixel(x, y, avg_ray_color);
 				output->set_depth_pixel(x, y, (avg_z_depth - scene.camera.z_near) / 
 										(scene.camera.z_far-scene.camera.z_near));
@@ -166,7 +153,7 @@ void Raytracer::render(const Scene& scene, Frame* output)
 }
 
 double3 refract(const double3& incident, const double3& normal, double eta) {
-    
+	// Calcule la direction de réfraction en utilisant l'équation de Snell.
     double dots = dot(normal, incident);
     double first_term = eta * dots;
 	double second_term = sqrt(1-(eta*eta)*(1-(dots*dots)));
@@ -181,6 +168,7 @@ void Raytracer::trace(const Scene& scene,
 {
     Intersection hit;
     if (scene.container->intersect(ray, EPSILON, *out_z_depth, &hit)) {
+		// Récupère le matériau de l'objet intersecté.
         Material& material = ResourceManager::Instance()->materials[hit.key_material];
         *out_color = shade(scene, hit);
 
@@ -212,53 +200,6 @@ void Raytracer::trace(const Scene& scene,
         *out_z_depth = hit.depth;
     }
 }
-
-// // Code without recursive
-// void Raytracer::trace(const Scene& scene,
-// 					  Ray ray, int ray_depth,
-// 					  double3* out_color, double* out_z_depth)
-// {
-// 	Intersection hit;
-// 	// Fait appel à l'un des containers spécifiées.
-// 	if(scene.container->intersect(ray,EPSILON,*out_z_depth,&hit)) {		
-// 		Material& material = ResourceManager::Instance()->materials[hit.key_material];
-// 		//printf("INtersec\n");
-// 		// @@@@@@ VOTRE CODE ICI
-// 		// Déterminer la couleur associée à la réflection d'un rayon de manière récursive.
-		
-// 		// @@@@@@ VOTRE CODE ICI
-// 		// Déterminer la couleur associée à la réfraction d'un rayon de manière récursive.
-// 		// 
-// 		// Assumez que l'extérieur/l'air a un indice de réfraction de 1.
-// 		//
-// 		// Toutes les géométries sont des surfaces et non pas de volumes.
-
-//         *out_color = shade(scene, hit);
-//         *out_z_depth = hit.depth;
-// 	} 
-
-// }
-
-// // Main function to calculate the new point in the plane
-// double3 move_in_plane(const double3& sphere_center, const double3& plane_point, double radius, const double2& displacement) {
-//     // Normal vector to the plane
-//     double3 normal = normalize(plane_point - sphere_center);
-
-//     // "Right" vector in the plane (perpendicular to the normal and the Z axis)
-//     double3 arbitrary_direction = {0, 0, 1};
-//     double3 right_vector = normalize(cross(normal, arbitrary_direction));
-
-//     // Vector "up" in the plane (perpendicular to the normal and to the "right")
-//     double3 up_vector = cross(right_vector, normal);
-
-//     // Scale displacements by the radius of the sphere
-//     double3 right_movement = right_vector * (displacement.x * radius);
-//     double3 up_movement = up_vector * (displacement.y * radius);
-
-//     // Calculate the new point on the plane
-//     double3 new_point = sphere_center + right_movement + up_movement;
-//     return new_point;
-// }
 
 // PETITE OPTIMISATION, on calcule les vecteurs une fois 
 // Main function to calculate the vectors in the plane
@@ -340,7 +281,6 @@ int clamp(int value, int min, int max) {
 
 double3 Raytracer::shade(const Scene& scene, Intersection hit)
 {
-	// lorsque vous serez rendu à la partie texture.
 	Material& material = ResourceManager::Instance()->materials[hit.key_material]; 
 	double3 base_color;
 
