@@ -167,21 +167,12 @@ void Raytracer::render(const Scene& scene, Frame* output)
 
 double3 refract(const double3& incident, const double3& normal, double eta) {
     
-    double cos_i = dot(normal, incident);
-    
-    // Check the possibility of total internal reflection
-    double sin2_t = eta * eta * (1.0 - cos_i * cos_i);
-    if (sin2_t > 1.0) {
-        // If there is total reflection, it returns a zero vector (no refraction)
-        return double3(0, 0, 0);
-    }
+    double dots = dot(normal, incident);
+    double first_term = eta * dots;
+	double second_term = sqrt(1-(eta*eta)*(1-(dots*dots)));
+	double3 refracted_direction = normal * (first_term - second_term) - eta * incident;
 
-    double cos_t = sqrt(1.0 - sin2_t);
-
-    double3 refracted_direction = 
-        normal * eta * cos_i - (cos_t) * normal - eta * incident;
-
-    return normalize(refracted_direction);  
+    return normalize(refracted_direction); 
 }
 
 void Raytracer::trace(const Scene& scene,
@@ -196,24 +187,26 @@ void Raytracer::trace(const Scene& scene,
         if (ray_depth < scene.max_ray_depth) {
             // Reflection
             double3 reflected_direction = normalize(ray.direction - 2 * dot(ray.direction, hit.normal) * hit.normal);
-            Ray reflected_ray = Ray(hit.position + hit.normal * EPSILON, reflected_direction);
-            double3 reflected_color{0, 0, 0};
-            trace(scene, reflected_ray, ray_depth + 1, &reflected_color, out_z_depth);
-            *out_color += reflected_color * material.k_reflection;
+			Ray reflected_ray = Ray(hit.position + hit.normal * EPSILON, reflected_direction);
+			double3 reflected_color{0, 0, 0};
+			double out_z_depth_copy = *out_z_depth;
+			trace(scene, reflected_ray, ray_depth + 1, &reflected_color, &out_z_depth_copy);
+			*out_color += reflected_color * material.k_reflection;
 
             // Refraction
-            double3 refracted_color{0, 0, 0};
-            if (material.refractive_index > 0.0) {
-                double eta = 1.0 / material.refractive_index;
-                double3 refracted_direction = refract(ray.direction, hit.normal, eta);
-                
-                // If the ray is refracted correctly
-                if (length(refracted_direction) > 0) {
-                    Ray refracted_ray = Ray(hit.position - hit.normal * EPSILON, refracted_direction);
-                    trace(scene, refracted_ray, ray_depth + 1, &refracted_color, out_z_depth);
-                    *out_color += refracted_color * material.k_refraction;
-                }
-            }
+			if (material.refractive_index > 2) {
+				//if (dot(double3(0,0,-1),ray.direction)>0) hit.depth = DBL_MAX;
+				//std::cout << "dot: " << dot(double3(0,0,1),ray.direction) << "\n";
+				double3 refracted_color{0, 0, 0};
+			    double eta = 1 / material.refractive_index;
+			    double3 refracted_direction = refract(ray.direction, hit.normal, eta);
+				//double3 refracted_direction = ray.direction;
+				Ray refracted_ray = Ray(hit.position - hit.normal * EPSILON, refracted_direction);
+				//Ray refracted_ray = Ray(double3(0,0,-2), refracted_direction);
+				trace(scene, refracted_ray, ray_depth + 1, &refracted_color, out_z_depth);
+				*out_color += refracted_color * material.k_refraction;
+			    
+			} 
         }
 
         *out_z_depth = hit.depth;
@@ -310,7 +303,8 @@ double facteur_lumiere(Scene scene, double3 point, SphericalLight ligth){
 
         Intersection hit_info;
         if (scene.container->intersect(ray_lumiere, EPSILON, ray_depth, &hit_info)) {
-			misses++;
+			Material& material_quad = ResourceManager::Instance()->materials[hit_info.key_material];
+			if(material_quad.refractive_index < 2) misses++;
 			//std::cout << "miss";
 		}
     }
@@ -421,7 +415,7 @@ double3 Raytracer::shade(const Scene& scene, Intersection hit)
 
         // Diffuse component: k_dλ * Sλ * (N ⋅ L_i)
 		double nDotL = std::max(0.0, dot(hit.normal, lightDir));
-		diffuse += material.k_diffuse * base_color * nDotL * penumbra;
+		diffuse += material.k_diffuse * base_color * nDotL * penumbra * light.emission;
 
         // Specular component: k_sλ * [ m * Sλ + (1 - m) ] * (R_i ⋅ E)^shininess
 		double3 R_i = normalize(2 * nDotL * hit.normal - lightDir);
@@ -432,7 +426,7 @@ double3 Raytracer::shade(const Scene& scene, Intersection hit)
 		rDotE = pow(rDotE, shininess);
 
 		// Calcular el componente especular usando el color del material y metallicidad
-		specular += material.k_specular * ((m * base_color) + (1 - m)) * rDotE * penumbra;
+		specular += material.k_specular * ((m * base_color) + (1 - m)) * rDotE * penumbra * light.emission;
 
     }
 

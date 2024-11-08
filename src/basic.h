@@ -7,7 +7,7 @@ using namespace linalg::aliases;
 #define PI 3.14159265358979323846
 #define EPSILON 1e-6
 
-#define RAY_QTE 10
+#define RAY_QTE 3
 
 // Valeur aléatoire entre [0,1)
 static double rand_double() {

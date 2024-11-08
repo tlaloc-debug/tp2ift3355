@@ -1,7 +1,7 @@
 CMakeFiles/RAY.dir/src/object.cpp.o: \
- /home/erick/Desktop/a24_ift3355_tp2/src/object.cpp \
+ /home/erick/Desktop/24_ift3355_tp2/src/object.cpp \
  /usr/include/stdc-predef.h \
- /home/erick/Desktop/a24_ift3355_tp2/src/object.h \
+ /home/erick/Desktop/24_ift3355_tp2/src/object.h \
  /usr/include/c++/9/fstream /usr/include/c++/9/istream \
  /usr/include/c++/9/ios /usr/include/c++/9/iosfwd \
  /usr/include/x86_64-linux-gnu/c++/9/bits/c++config.h \
@@ -180,8 +180,8 @@ CMakeFiles/RAY.dir/src/object.cpp.o: \
  /usr/include/c++/9/tr1/poly_laguerre.tcc \
  /usr/include/c++/9/tr1/riemann_zeta.tcc /usr/include/c++/9/cfloat \
  /usr/lib/gcc/x86_64-linux-gnu/9/include/float.h \
- /home/erick/Desktop/a24_ift3355_tp2/src/basic.h \
- /home/erick/Desktop/a24_ift3355_tp2/extern/linalg/linalg.h \
+ /home/erick/Desktop/24_ift3355_tp2/src/basic.h \
+ /home/erick/Desktop/24_ift3355_tp2/extern/linalg/linalg.h \
  /usr/include/c++/9/functional /usr/include/c++/9/bits/refwrap.h \
  /usr/include/c++/9/bits/std_function.h /usr/include/c++/9/unordered_map \
  /usr/include/c++/9/bits/hashtable.h \
@@ -191,10 +191,10 @@ CMakeFiles/RAY.dir/src/object.cpp.o: \
  /usr/include/c++/9/bits/algorithmfwd.h \
  /usr/include/c++/9/bits/stl_heap.h /usr/include/c++/9/bits/stl_tempbuf.h \
  /usr/include/c++/9/bits/uniform_int_dist.h \
- /home/erick/Desktop/a24_ift3355_tp2/extern/bitmap_image/bitmap_image.h \
+ /home/erick/Desktop/24_ift3355_tp2/extern/bitmap_image/bitmap_image.h \
  /usr/include/c++/9/algorithm \
  /usr/include/c++/9/pstl/glue_algorithm_defs.h \
  /usr/include/c++/9/pstl/execution_defs.h /usr/include/c++/9/cstring \
  /usr/include/string.h /usr/include/strings.h /usr/include/c++/9/iterator \
  /usr/include/c++/9/bits/stream_iterator.h \
- /home/erick/Desktop/a24_ift3355_tp2/src/aabb.h
+ /home/erick/Desktop/24_ift3355_tp2/src/aabb.h
