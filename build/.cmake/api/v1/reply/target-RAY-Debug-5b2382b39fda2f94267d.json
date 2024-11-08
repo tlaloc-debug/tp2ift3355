@@ -2,10 +2,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "RAY.exe"
-		},
-		{
-			"path" : "RAY.pdb"
+			"path" : "RAY"
 		}
 	],
 	"backtrace" : 1,
@@ -59,11 +56,11 @@
 			[
 				{
 					"backtrace" : 2,
-					"path" : "C:/Users/maxim/OneDrive/Bureau/tp2ift3355-4/src"
+					"path" : "/home/erick/Desktop/a24_ift3355_tp2/src"
 				},
 				{
 					"backtrace" : 2,
-					"path" : "C:/Users/maxim/OneDrive/Bureau/tp2ift3355-4/extern"
+					"path" : "/home/erick/Desktop/a24_ift3355_tp2/extern"
 				}
 			],
 			"language" : "CXX",
@@ -99,16 +96,12 @@
 			{
 				"fragment" : "",
 				"role" : "flags"
-			},
-			{
-				"fragment" : "-lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32",
-				"role" : "libraries"
 			}
 		],
 		"language" : "CXX"
 	},
 	"name" : "RAY",
-	"nameOnDisk" : "RAY.exe",
+	"nameOnDisk" : "RAY",
 	"paths" : 
 	{
 		"build" : ".",

@@ -152,6 +152,7 @@ void Raytracer::render(const Scene& scene, Frame* output)
     delete[] z_buffer;
 }
 
+// Cette fonction calcule la direction d'un rayon réfracté
 double3 refract(const double3& incident, const double3& normal, double eta) {
 	// Calcule la direction de réfraction en utilisant l'équation de Snell.
     double dots = dot(normal, incident);
@@ -173,84 +174,100 @@ void Raytracer::trace(const Scene& scene,
         *out_color = shade(scene, hit);
 
         if (ray_depth < scene.max_ray_depth) {
+
             // Reflection
+			// formule de réflexion vue dans les notes de cours
             double3 reflected_direction = normalize(ray.direction - 2 * dot(ray.direction, hit.normal) * hit.normal);
+			
+			// New ray
 			Ray reflected_ray = Ray(hit.position + hit.normal * EPSILON, reflected_direction);
 			double3 reflected_color{0, 0, 0};
 			double out_z_depth_copy = *out_z_depth;
+			
+			// appele récursif
 			trace(scene, reflected_ray, ray_depth + 1, &reflected_color, &out_z_depth_copy);
 			*out_color += reflected_color * material.k_reflection;
 
             // Refraction
-			if (material.refractive_index > 2) {
-				//if (dot(double3(0,0,-1),ray.direction)>0) hit.depth = DBL_MAX;
-				//std::cout << "dot: " << dot(double3(0,0,1),ray.direction) << "\n";
+			if (hit.key_material == "glass") {
+
 				double3 refracted_color{0, 0, 0};
+
+				// calcul de eta en tenant compte de l'indice de réfraction de l'air et du matériau réfractif
 			    double eta = 1 / material.refractive_index;
+
+				// calcul de la direction du nouveau rayon réfracté
 			    double3 refracted_direction = refract(ray.direction, hit.normal, eta);
-				//double3 refracted_direction = ray.direction;
+
+				// New ray
 				Ray refracted_ray = Ray(hit.position - hit.normal * EPSILON, refracted_direction);
-				//Ray refracted_ray = Ray(double3(0,0,-2), refracted_direction);
+
+				// appelé récursif
 				trace(scene, refracted_ray, ray_depth + 1, &refracted_color, out_z_depth);
 				*out_color += refracted_color * material.k_refraction;
 			    
 			} 
         }
 
+		// mise à jour de la profondeur
         *out_z_depth = hit.depth;
     }
 }
 
-// PETITE OPTIMISATION, on calcule les vecteurs une fois 
-// Main function to calculate the vectors in the plane
+// Cette fonction reçoit deux points dans l'espace (centre de la sphère et point d'intersection), 
+// elle trouve un plan qui passe par le premier point et trouve sa normal qui pointe vers le deuxième point
+// elle retourne les vecteurs horizontal et vertical correspondant au plan
 std::pair<double3, double3> get_vecteurs(const double3& sphere_center, const double3& plane_point) {
-    // Normal vector to the plane
+    // Vecteur normal au plan
     double3 normal = normalize(plane_point - sphere_center);
 
-    // "Right" vector in the plane (perpendicular to the normal and the Z axis)
+    // Vecteur « droit » dans le plan (perpendiculaire à la normale et à l'axe Z)
     double3 arbitrary_direction = {0, 0, 1};
     double3 right_vector = normalize(cross(normal, arbitrary_direction));
 
-    // Vector "up" in the plane (perpendicular to the normal and to the "right")
+    // Vecteur « en haut » dans le plan (perpendiculaire à la normale et à la « droite »)
     double3 up_vector = cross(right_vector, normal);
 
-    // Return only the right and up vectors
     return {right_vector, up_vector};
 }
 
+// Cette fonction lance n rayons vers un voisinage circulaire de rayon r, 
+// dispersés aléatoirement, et calcule le pourcentage de rayons ayant atteint le
+// disque (projection 2D d'une sphère).
+// r correspond au rayon de la lumière défini dans le fichier RAY
+// n (RAY_QTE) correspond au nombre de rayons défini dans le fichier basic.h
 double facteur_lumiere(Scene scene, double3 point, SphericalLight ligth){
-
-	//if (ligth.radius == 0) return 1;
 
     int misses = 0;
 	auto [right_vector, up_vector] = get_vecteurs(ligth.position, point);
 
     for (int i = 1; i <= RAY_QTE; ++i) {
-        // Generate a random point on the unit disk
+        // Générer un point aléatoire sur le disque unité
         double2 random_dir = random_in_unit_disk();
 
-		// Get point position on scene
-		// double3 ray_end = move_in_plane(ligth.position, point, ligth.radius, random_dir);
+		// Obtenir la position du point sur scène
 		double3 right_movement = right_vector * (random_dir.x * ligth.radius);
 		double3 up_movement = up_vector * (random_dir.y * ligth.radius);
 		double3 ray_end = ligth.position + right_movement + up_movement;
 
 		Ray ray_lumiere;
 
-        // Create the ray with random direction
+        // Créer le rayon avec une direction aléatoire
         ray_lumiere = Ray(point, normalize(ray_end - point));
 
-		double ray_depth = length(ray_end - point);
+		// ajustez la longueur du rayon au cas où la lumière serait une sphère
+		double ray_depth = length(ray_end - point) - ligth.radius - EPSILON;
 
+		// calcul des rayons qui n'ont pas atteint la lumière
         Intersection hit_info;
         if (scene.container->intersect(ray_lumiere, EPSILON, ray_depth, &hit_info)) {
 			Material& material_quad = ResourceManager::Instance()->materials[hit_info.key_material];
-			if(material_quad.refractive_index < 2) misses++;
-			//std::cout << "miss";
+			// Si le matériau est réfractif, on ignore l'intersection
+			if(hit_info.key_material != "glass") misses++;
 		}
     }
 
-    // Calculate the proportion of rays that miss
+    // Calculer la proportion de rayons qui manquent la lumière
     double miss_ratio = static_cast<double>(misses) / RAY_QTE;
 	double porcentage_lumiere = 1 - miss_ratio;
 
@@ -309,10 +326,9 @@ double3 Raytracer::shade(const Scene& scene, Intersection hit)
     double3 diffuse(0, 0, 0);
     double3 specular(0, 0, 0);
 
-    // Vector pointing towards the eye
     double3 Eye = normalize(scene.camera.position - hit.position);
 
-    // Ambient light calculation: L_aλ * k_aλ * Sλ
+    // Calcul de la lumière ambiante 
     ambient = scene.ambient_light * material.k_ambient * base_color;
 
 	double penumbra;
@@ -322,55 +338,26 @@ double3 Raytracer::shade(const Scene& scene, Intersection hit)
 
 		double3 lightDir = normalize(light.position - hit.position);
 
-		// ================= CODE OMBRE SANS PENOMBRE ====================
-
-        // // Light direction and distance to the light source
-        
-        // double lightDistance = length(light.position - hit.position);
-
-        // // Shadow ray: emitted from the hit position towards the light source
-        // // Offset the starting position to avoid "surface acne" issues
-        // Ray shadowRay(hit.position + EPSILON * hit.normal, lightDir);
-
-        // // Check if any object obstructs the shadow ray up to the light source
-        // bool in_shadow = false;
-        // // for (const auto& obj : scene.objects) {
-        // //     // If the shadow ray intersects an object within the light distance, the point is in shadow
-        // //     if (obj->intersect(shadowRay, 1e-6, lightDistance)) {
-        // //         in_shadow = true;
-        // //         break;
-        // //     }
-        // // }
-		// if (scene.container->intersect(shadowRay, EPSILON, lightDistance, &hit)) in_shadow = true;
-
-        // // If the point is in shadow, skip diffuse and specular contributions for this light
-        // if (in_shadow) {
-        //     continue;
-        // }
-
-		// ===============================================================================================
-
 		penumbra = facteur_lumiere(scene, hit.position, light);
-		//penumbra = 1;
 
-        // Diffuse component: k_dλ * Sλ * (N ⋅ L_i)
+        // Diffuse component
 		double nDotL = std::max(0.0, dot(hit.normal, lightDir));
 		diffuse += material.k_diffuse * base_color * nDotL * penumbra * light.emission;
 
-        // Specular component: k_sλ * [ m * Sλ + (1 - m) ] * (R_i ⋅ E)^shininess
+        // Specular component
 		double3 R_i = normalize(2 * nDotL * hit.normal - lightDir);
 		double rDotE = std::max(0.0, dot(R_i, Eye));
-		double m = material.metallic;  // Usar el factor de metallicidad
+		double m = material.metallic;  
 		double shininess = material.shininess;
 
 		rDotE = pow(rDotE, shininess);
 
-		// Calcular el componente especular usando el color del material y metallicidad
+		// Calculer la composante spéculaire en utilisant la couleur et la métallicité du matériau
 		specular += material.k_specular * ((m * base_color) + (1 - m)) * rDotE * penumbra * light.emission;
 
     }
 
-    // Sum the components to get the final color
+    // Additionnez les composants pour obtenir la couleur finale
     double3 outColor = ambient + diffuse + specular;
     return outColor;
 }

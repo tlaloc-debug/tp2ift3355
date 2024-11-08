@@ -1,7 +1,8 @@
 CMakeFiles/RAY.dir/src/aabb.cpp.o: \
- /home/erick/Desktop/24_ift3355_tp2/src/aabb.cpp \
- /usr/include/stdc-predef.h /home/erick/Desktop/24_ift3355_tp2/src/aabb.h \
- /usr/include/c++/9/vector /usr/include/c++/9/bits/stl_algobase.h \
+ /home/erick/Desktop/a24_ift3355_tp2/src/aabb.cpp \
+ /usr/include/stdc-predef.h \
+ /home/erick/Desktop/a24_ift3355_tp2/src/aabb.h /usr/include/c++/9/vector \
+ /usr/include/c++/9/bits/stl_algobase.h \
  /usr/include/x86_64-linux-gnu/c++/9/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/9/bits/os_defines.h \
  /usr/include/features.h /usr/include/x86_64-linux-gnu/sys/cdefs.h \
@@ -45,8 +46,8 @@ CMakeFiles/RAY.dir/src/aabb.cpp.o: \
  /usr/include/c++/9/bits/range_access.h \
  /usr/include/c++/9/bits/vector.tcc \
  /usr/lib/gcc/x86_64-linux-gnu/9/include/float.h \
- /home/erick/Desktop/24_ift3355_tp2/src/basic.h \
- /home/erick/Desktop/24_ift3355_tp2/extern/linalg/linalg.h \
+ /home/erick/Desktop/a24_ift3355_tp2/src/basic.h \
+ /home/erick/Desktop/a24_ift3355_tp2/extern/linalg/linalg.h \
  /usr/include/c++/9/cmath /usr/include/math.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/x86_64-linux-gnu/bits/types.h \

@@ -1,5 +1,5 @@
 CMakeFiles/RAY.dir/src/main.cpp.o: \
- /home/erick/Desktop/24_ift3355_tp2/src/main.cpp \
+ /home/erick/Desktop/a24_ift3355_tp2/src/main.cpp \
  /usr/include/stdc-predef.h /usr/include/c++/9/cstdio \
  /usr/include/x86_64-linux-gnu/c++/9/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/9/bits/os_defines.h \
@@ -205,7 +205,7 @@ CMakeFiles/RAY.dir/src/main.cpp.o: \
  /usr/include/c++/9/bits/shared_ptr_base.h \
  /usr/include/c++/9/bits/allocated_ptr.h /usr/include/c++/9/bits/fs_dir.h \
  /usr/include/c++/9/bits/fs_ops.h \
- /home/erick/Desktop/24_ift3355_tp2/src/parser.h \
+ /home/erick/Desktop/a24_ift3355_tp2/src/parser.h \
  /usr/include/c++/9/climits \
  /usr/lib/gcc/x86_64-linux-gnu/9/include/limits.h \
  /usr/lib/gcc/x86_64-linux-gnu/9/include/syslimits.h \
@@ -216,15 +216,15 @@ CMakeFiles/RAY.dir/src/main.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
  /usr/include/x86_64-linux-gnu/bits/uio_lim.h /usr/include/c++/9/deque \
  /usr/include/c++/9/bits/stl_deque.h /usr/include/c++/9/bits/deque.tcc \
- /home/erick/Desktop/24_ift3355_tp2/extern/bitmap_image/bitmap_image.h \
+ /home/erick/Desktop/a24_ift3355_tp2/extern/bitmap_image/bitmap_image.h \
  /usr/include/c++/9/cstring /usr/include/string.h /usr/include/strings.h \
  /usr/include/c++/9/iterator /usr/include/c++/9/bits/stream_iterator.h \
- /home/erick/Desktop/24_ift3355_tp2/src/scene.h \
- /home/erick/Desktop/24_ift3355_tp2/src/resource_manager.h \
- /home/erick/Desktop/24_ift3355_tp2/src/object.h \
- /home/erick/Desktop/24_ift3355_tp2/src/basic.h \
- /home/erick/Desktop/24_ift3355_tp2/extern/linalg/linalg.h \
- /home/erick/Desktop/24_ift3355_tp2/src/aabb.h \
- /home/erick/Desktop/24_ift3355_tp2/src/container.h \
- /home/erick/Desktop/24_ift3355_tp2/src/raytracer.h \
- /home/erick/Desktop/24_ift3355_tp2/src/frame.h
+ /home/erick/Desktop/a24_ift3355_tp2/src/scene.h \
+ /home/erick/Desktop/a24_ift3355_tp2/src/resource_manager.h \
+ /home/erick/Desktop/a24_ift3355_tp2/src/object.h \
+ /home/erick/Desktop/a24_ift3355_tp2/src/basic.h \
+ /home/erick/Desktop/a24_ift3355_tp2/extern/linalg/linalg.h \
+ /home/erick/Desktop/a24_ift3355_tp2/src/aabb.h \
+ /home/erick/Desktop/a24_ift3355_tp2/src/container.h \
+ /home/erick/Desktop/a24_ift3355_tp2/src/raytracer.h \
+ /home/erick/Desktop/a24_ift3355_tp2/src/frame.h
