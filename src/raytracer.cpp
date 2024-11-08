@@ -176,7 +176,7 @@ void Raytracer::trace(const Scene& scene,
         if (ray_depth < scene.max_ray_depth) {
 
             // Reflection
-			// formule de réflexion vue dans les notes de cours
+			// Formule de réflexion vue dans les notes de cours
             double3 reflected_direction = normalize(ray.direction - 2 * dot(ray.direction, hit.normal) * hit.normal);
 			
 			// New ray
@@ -193,16 +193,16 @@ void Raytracer::trace(const Scene& scene,
 
 				double3 refracted_color{0, 0, 0};
 
-				// calcul de eta en tenant compte de l'indice de réfraction de l'air et du matériau réfractif
+				// Calcul de eta en tenant compte de l'indice de réfraction de l'air et du matériau réfractif
 			    double eta = 1 / material.refractive_index;
 
-				// calcul de la direction du nouveau rayon réfracté
+				// Calcul de la direction du nouveau rayon réfracté
 			    double3 refracted_direction = refract(ray.direction, hit.normal, eta);
 
 				// New ray
 				Ray refracted_ray = Ray(hit.position - hit.normal * EPSILON, refracted_direction);
 
-				// appelé récursif
+				// appel récursif
 				trace(scene, refracted_ray, ray_depth + 1, &refracted_color, out_z_depth);
 				*out_color += refracted_color * material.k_refraction;
 			    
@@ -255,10 +255,10 @@ double facteur_lumiere(Scene scene, double3 point, SphericalLight ligth){
         // Créer le rayon avec une direction aléatoire
         ray_lumiere = Ray(point, normalize(ray_end - point));
 
-		// ajustez la longueur du rayon au cas où la lumière serait une sphère
+		// Ajustez la longueur du rayon au cas où la lumière serait une sphère
 		double ray_depth = length(ray_end - point) - ligth.radius - EPSILON;
 
-		// calcul des rayons qui n'ont pas atteint la lumière
+		// Calcul des rayons qui n'ont pas atteint la lumière
         Intersection hit_info;
         if (scene.container->intersect(ray_lumiere, EPSILON, ray_depth, &hit_info)) {
 			Material& material_quad = ResourceManager::Instance()->materials[hit_info.key_material];
