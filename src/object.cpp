@@ -382,7 +382,7 @@ AABB Mesh::compute_aabb() {
         global_positions.push_back(global_position);
     }
 
-    // Construit un nouveau AABB global englobant tous les sommets transformés,
+    // Construit un nouveau AABB global englobant tous les sommets transformés.
     return construct_aabb(global_positions);
 	// return Object::compute_aabb();
 }

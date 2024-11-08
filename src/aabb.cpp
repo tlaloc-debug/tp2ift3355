@@ -37,7 +37,7 @@ std::vector<double3> retrieve_corners(AABB aabb) {
     // Les coins sont calculés en combinant les valeurs min et max pour chaque axe (x, y, z).
 	return {
         {aabb.min.x, aabb.min.y, aabb.min.z},
-        {aabb.min.x, aabb.min.y, aabb.max.z},
+        {aabb.min.x, aabb.min.y, aabb.max.z}, 
         {aabb.min.x, aabb.max.y, aabb.min.z},
         {aabb.min.x, aabb.max.y, aabb.max.z},
         {aabb.max.x, aabb.min.y, aabb.min.z},
@@ -50,7 +50,7 @@ std::vector<double3> retrieve_corners(AABB aabb) {
 // @@@@@@ VOTRE CODE ICI
 // Implémenter la fonction afin de créer un AABB qui englobe tous les points.
 AABB construct_aabb(std::vector<double3> points) {
-	// Si aucun point n'est fourni, on retourne un AABB infini.
+	//Si aucun point n'est fourni, on retourne un AABB infini.
 	if(points.empty()) {
 		return AABB{double3{-DBL_MAX,-DBL_MAX,-DBL_MAX},double3{DBL_MAX,DBL_MAX,DBL_MAX}};
 	}

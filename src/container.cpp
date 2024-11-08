@@ -65,7 +65,7 @@ bool Naive::intersect(Ray ray, double t_min, double t_max, Intersection* hit) {
             if (objects[i]->intersect(ray, t_min, closest_so_far, &temp_hit)) {
                 hit_anything = true;
 
-                // Met à jour les informations d'intersection si l'objet est plus proche
+                // Met a jour les informations d'intersection si l'objet est plus proche
                 if (temp_hit.depth < closest_so_far) {
                     closest_so_far = temp_hit.depth;  // Met à jour la profondeur maximale la plus proche.
                     *hit = temp_hit;  // Met à jour l'intersection la plus proche.
